@@ -1,0 +1,58 @@
+openapi: '2.0.0'
+
+info:
+  title: 'Backend application'
+  description: |
+    This is a backend application that receives the request and makes a callback to the 
+    originating service after processing the request.
+
+  license:
+    name: 'Apache 2.0'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+  version: '1.0'
+
+servers:
+  - url: 'http://localhost:{port}/{basePath}'
+    description: 'Backend server'
+    variables:
+      port:
+        default: '8020'
+      basePath:
+        default: 'v1'
+
+paths:
+  /quote:
+    post:
+      summary: 'Return a random quote'
+      description: |
+        Returns a random quote with the provided string from the wilds of the Internets.
+      operationId: 'getRandomQuote'
+      requestBody:
+        content:
+          'application/x-www-form-urlencoded':
+            schema:
+              properties:
+                keyword:
+                  description: 'Keyword used for looking up the quote.'
+                  type: string
+              required:
+                - keyword
+      responses:
+        '202':
+          description: 'Request was accepted for processing.'
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/response'
+        '400':
+          description: 'Invalid request was made to the service.'
+
+components:
+  schemas:
+    response:
+      type: object
+      properties:
+        guid:
+          description: 'GUID identifying the request'
+          type: string

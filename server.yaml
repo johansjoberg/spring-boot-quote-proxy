@@ -1,0 +1,69 @@
+openapi: '3.0.1'
+
+info:
+  title: 'Sync quote application'
+  description: |
+    This is a classic sync HTTP request providing application that
+    returns quotes from Internet.
+
+  license:
+    name: 'Apache 2.0'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+  version: '1.0'
+
+servers:
+  - url: 'http://localhost:{port}/application/{basePath}'
+    description: 'Main application'
+    variables:
+      port:
+        default: '8000'
+      basePath:
+        default: 'v1'
+
+paths:
+  /quote:
+    get:
+      summary: 'Return a random quote'
+      description: |
+        Returns a random quote with the provided string from the wilds
+        of the Internets.
+      operationId: 'getRandomQuote'
+      parameters:
+      - name: keyword
+        in: query
+        description: 'Keyword used for getting the quote'
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        '200':
+          description: 'Quote with the keyword from Internet'
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/quote'
+          
+        '400':
+          description: 'Invalid request was made to the service.'
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/error'
+
+components:
+  schemas:
+    quote:
+      type: object
+      properties:
+        keyword:
+          type: string
+        quote:
+          type: string
+    
+    error:
+      type: object
+      properties:
+        message:
+          type: string

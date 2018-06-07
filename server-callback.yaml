@@ -1,0 +1,64 @@
+openapi: '3.0.1'
+
+info:
+  title: 'Server callback listener'
+  description: |
+    This is a listener that receives the callback from the backend.
+
+  license:
+    name: 'Apache 2.0'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+  version: '1.0'
+
+servers:
+  - url: 'http://localhost:{port}/callback/{basePath}'
+    description: 'Backend callback listener'
+    variables:
+      port:
+        default: '8000'
+      basePath:
+        default: 'v1'
+
+paths:
+  /quoteResult:
+    post:
+      summary: 'Returns a random quote from backend'
+      description: |
+        Returns a random quote with the provided string from the wilds of the Internets.
+      operationId: 'postRandomQuote'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              properties:
+                guid:
+                  description: 'GUID of the request'
+                  type: string
+                keyword:
+                  description: 'Keyword used for looking up the quote.'
+                  type: string
+                quote:
+                  description: 'Quote from the Internets'
+                  type: string
+              required:
+                - keyword
+                - quote
+      responses:
+        '202':
+          description: 'Request was accepted.'
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/response'
+        '400':
+          description: 'Invalid request was made to the service.'
+
+components:
+  schemas:
+    response:
+      type: object
+      properties:
+        guid:
+          description: 'GUID identifying the request'
+          type: string
